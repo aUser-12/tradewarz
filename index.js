@@ -7,5 +7,5 @@ fastify.get('/', async (request, reply) => {
 
 fastify.listen({ port: 3000 }, (err, address) => {
   if (err) throw err
-  console.log(`🚀 Server running at ${address}`)
+  console.log(` Server running at ${address}`)
 })
