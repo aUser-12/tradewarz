@@ -1,16 +1,21 @@
 const fs = require('fs')
 const K =32;
 
-function getExpectedScore(ratingA,ratingB) {
+function getExpectedScore(ratingA,ratingB,) {
     return 1/ (1+ Math.pow(10, (ratingB - ratingA) / 400));
 }
 
-function updateRatings(ratingA,ratingB, scoreA){
+function updateRatings(ratingA,ratingB, scoreA, scoreB){
   const expectedA = getExpectedScore(ratingA, ratingB);
   const expectedB = getExpectedScore(ratingB, ratingA);
-
-  const newRatingA = ratingA + K * (scoreA - expectedA);
-  const newRatingB = ratingB + K * ((1 - scoreA) - expectedB);
+  const total = scoreA+ scoreB;
+  let normA = 0.5, normB = 0.5;
+  if (total > 0) {
+    normA = scoreA / total;
+    normB = scoreB / total;
+  }
+  const newRatingA = ratingA + K * (normA - expectedA);
+  const newRatingB = ratingB + K * (normB - expectedB);
 
   return {
     newRatingA: Math.round(newRatingA),
@@ -31,13 +36,15 @@ function processMatches() {
     const traderB = users.find(u => u.username === match.traderB);
     if (!traderA || !traderB) continue;
 
-    const scoreA = match.winner === match.traderA ? 1 : 0;
+    if (typeof match.scoreA !== 'number' || typeof match.scoreB !== 'number') continue;
 
     const { newRatingA, newRatingB } = updateRatings(
       traderA.rating,
       traderB.rating,
-      scoreA
+      match.scoreA,
+      match.scoreB
     );
+
 
     traderA.rating = newRatingA;
     traderB.rating = newRatingB;
