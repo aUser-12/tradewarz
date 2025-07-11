@@ -16,9 +16,8 @@ cron.schedule('*/25 * * * *', () => {
 }); 
 
 fastify.get('/', async (request, reply) => {
-  return { hello: 'hello world' }
+  reply.sendFile('index.html');
 })
-
 fastify.listen({ port: 3000 }, (err, address) => {
   if (err) throw err
   console.log(` Server running at ${address}`)
