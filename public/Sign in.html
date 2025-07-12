@@ -182,14 +182,14 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Sign in to continue your trading journey</p>
 
-        <form class="login-form">
-            <label>Email-Address</label>
+        <form class="login-form" action = "/signup">
+            <label>Username</label>
             <div class="input-box">
                 <svg class="icon" fill="none" stroke="#888" viewBox="0 0 24 24">
                     <path stroke-width="2" d="M4 4h16v16H4z" fill="none"/>
                     <path stroke-width="2" d="M4 4l8 8 8-8"/>
                 </svg>
-                <input tpe="email" placeholder="Enter your email" required/>
+                <input type="text" id = "username" placeholder="Enter your username" required/>
             </div>
 
             <label>Password</label>
@@ -212,20 +212,12 @@
 
             <button type="submit" class="sign-in">Sign In →</button>
         </form>
-
-        <!-- <div class="or">or</div> -->
-
-        <!-- <p class="signup">Don't have an account?<a href="#"> Sign up</a> </p> -->
     </div>
 
     <script>
-        const toggle = document.getElementById("togglePassword");
-        const password = document.getElementById("password");
-
-        toggle.addEventListener("click", () => {
-            const type = password.getAttribute("type") === "password" ? "text" : "password";
-            password.setAttribute("type", type);
-        })
+        usernameInput = document.getElementById('username');
+        passwordInput = document.getElementById('password');
+        
     </script>
 </body>
 </html>
