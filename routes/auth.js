@@ -1,84 +1,89 @@
-function authorize(request, reply){
-    if (request.method === 'POST'){
-        const {action, username , password} = request.body;
-        if (!username || !password){
-            return reply.status(400).send('Username and password are required');
-        }
-        let users = JSON.parse(fs.readFileSync('users.json'));
+const fs = require('fs');
+const crypto = require('crypto');
 
-        if(action === 'register'){
-            const exists = users.some(u => u.username === username);
-            if (exists) {
-                return reply.status(400).send('Username already exists');
-            }
-            const hashed = crypto.createHash('sha256').update(password).digest('hex');
-            users.push({
-                username,
-                password: hashed,
-                rating: 600
-            });
-            fs.writeFileSync('user.json', JSON.stringify(users, null, 4));
-            request.session.user = username;
-            return reply.redirect('/dashboard');
-
-
-        }
-        if(action === "login"){
-            const hashed = crypto.createHash('sha256').update(password).digest('hex');
-            const user = users.find(u => u.username === username);
-            if (user && user.password === hashed) {
-                request.session.user = username;
-                return reply.redirect('/dashboard');
-            }
-            return reply.status(401).send('Invalid credentials');
-
-        }
-    const message = request.query.message;
-    return reply.view('auth', { message });
-    
-
-    }
-
+// Utility: Read users from JSON
+function readUsers() {
+  try {
+    return JSON.parse(fs.readFileSync('users.json'));
+  } catch {
+    return [];
+  }
 }
-function signout(request, reply){
-    reply.clearCookie('sessionId', { path: '/' });
-    reply.redirect("/auth?message=Signed Out");
+
+// Utility: Write users to JSON
+function writeUsers(users) {
+  fs.writeFileSync('users.json', JSON.stringify(users, null, 4));
 }
-function change_password(request , reply){
-    if (request.method === 'POST'){
-        const {username,newPass, confirmPass } = request.body;
-        if (!username || !newPass || confirmPass){
-        return reply.status(400).send('All feilds are required.');
-    }
-    if (newPass !== confirmPass){
-        return reply.status(400).send('Passwords dont match.');
-    }
-    let users;
-    try {
-            users = JSON.parse(fs.readFileSync('user.json'));
-        } catch (err) {
-            return reply.status(400).send('User data not found. Please register first.');
-        }
 
-        const user = users.find(u => u.username === username);
-        if (!user) {
-            return reply.status(404).send('Username not found.');
-        }
+// Hash function
+function hashPassword(password) {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
 
-        const hashed = crypto.createHash('sha256').update(newPassword).digest('hex');
-        user.password = hashed;
+// AUTH FUNCTIONS
 
-        try {
-            fs.writeFileSync('user.json', JSON.stringify(users, null, 4));
-        } catch (err) {
-            return reply.status(500).send('Error updating password. Please try again later.');
-        }
+function authorize(action, username, password) {
+  if (!username || !password) {
+    return { success: false, status: 400, message: 'Username and password are required' };
+  }
 
-        return reply.redirect('/auth?message=Password updated successfully. Please log in.');
+  const users = readUsers();
+
+  if (action === 'register') {
+    const exists = users.some(u => u.username === username);
+    if (exists) {
+      return { success: false, status: 400, message: 'Username already exists' };
     }
-    
+
+    const hashed = hashPassword(password);
+    users.push({ username, password: hashed, rating: 600 });
+    writeUsers(users);
+
+    return { success: true, status: 200, message: 'Registered', redirect: '/dashboard' };
+  }
+
+  if (action === 'login') {
+    const user = users.find(u => u.username === username);
+    const hashed = hashPassword(password);
+    if (user && user.password === hashed) {
+      return { success: true, status: 200, message: 'Login successful', redirect: '/dashboard' };
+    } else {
+      return { success: false, status: 401, message: 'Invalid credentials' };
     }
+  }
+
+  return { success: false, status: 400, message: 'Invalid action' };
+}
+
+function changePassword(username, newPass, confirmPass) {
+  if (!username || !newPass || !confirmPass) {
+    return { success: false, status: 400, message: 'All fields are required.' };
+  }
+
+  if (newPass !== confirmPass) {
+    return { success: false, status: 400, message: 'Passwords do not match.' };
+  }
+
+  const users = readUsers();
+  const user = users.find(u => u.username === username);
+
+  if (!user) {
+    return { success: false, status: 404, message: 'Username not found.' };
+  }
+
+  const hashed = hashPassword(newPass);
+  user.password = hashed;
+  writeUsers(users);
+
+  return { success: true, status: 200, message: 'Password updated', redirect: '/signup?message=Password updated successfully. Please log in.' };
+}
+
+function signout() {
+  return { success: true, redirect: '/signup?message=Signed Out' };
+}
+
 module.exports = {
-    authorize,
-    change_password
-}
+  authorize,
+  changePassword,
+  signout,
+};
