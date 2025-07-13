@@ -45,7 +45,11 @@ fastify.get('/auth', async (request, reply) => {
 fastify.post('/auth', async (request, reply) => {
   const { username, password } = request.body;
   const result = await authorize("login", username, password);
+  if (result.success) {
+    request.session.username = username;
+  }
   return reply.send(result);
+  
 });
 
 fastify.get('/changepass', async (request, reply) => {
@@ -61,4 +65,32 @@ fastify.post('/changepass', async (request, reply) => {
 fastify.listen({ port: 3000 }, (err, address) => {
   if (err) throw err;
   console.log(` Server running at ${address}`);
+});
+fastify.get('/dashboard', async (request, reply) => {
+  const username = request.session.username;
+
+  if (!username) {
+    return reply.code(401).send({ error: 'Not logged in' });
+  }
+
+  const users = JSON.parse(fs.readFileSync('./users.json'));
+  const user = users.find(u => u.username === username);
+
+  if (!user) {
+    return reply.code(404).send({ error: 'User not found' });
+  }
+
+  return {
+    username: user.username,
+    stats: [
+      { label: "Rating (ELO)", value: user.rating },
+      { label: "Total Gains", value: `$${user.totalGains}` },
+      { label: "Average Return", value: `${user.avgReturn}%` },
+      { label: "Win Rate", value: `${user.winRate}%` },
+      { label: "Trades Made", value: user.tradesMade },
+      { label: "Best Match", value: user.bestMatch }
+    ],
+    chartData: user.weeklyReturns,
+    matchHistory: user.matchHistory
+  };
 });
