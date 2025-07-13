@@ -168,7 +168,7 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Sign in to continue your trading journey</p>
 
-        <form class="login-form" action = "/signup">
+        <form class="login-form" id="loginForm">
             <label>Username</label>
             <div class="input-box">
                 <svg class="icon" fill="none" stroke="#888" viewBox="0 0 24 24">
@@ -197,9 +197,46 @@
     </div>
 
     <script>
-        usernameInput = document.getElementById('username');
-        passwordInput = document.getElementById('password');
-        
-    </script>
+  const loginForm = document.getElementById('loginForm');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); // prevent default form submission
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !password) {
+      alert('Please enter both username and password.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'login',
+          username,
+          password
+        })
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        const result = await response.text();
+        alert(result); // or display it in the UI
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Login failed. Please try again later.');
+    }
+  });
+</script>
+
 </body>
 </html>
