@@ -31,6 +31,15 @@ fastify.get('/signup', async (request, reply) => {
 fastify.post('/signup', async (request, reply) => {
   const { username, password } = request.body;
   console.log('Form Data:', username, password);
+  authorize("register",username,password)
+  return reply.send({ success: true, username });
+});
+fastify.get('/auth', async (request, reply) => {
+  return reply.sendFile('signup.html');
+})
+fastify.post('/auth', async (request, reply) => {
+  const { username, password } = request.body;
+  console.log('Form Data:', username, password);
   authorize("login",username,password)
   return reply.send({ success: true, username });
 });
