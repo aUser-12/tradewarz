@@ -1,254 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tradewarz - Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family:'Segoe UI', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tradewarz - Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family:'Segoe UI', sans-serif;
+    }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            min-height: 100vh;
-            padding: 2rem;
-        }
+    body {
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+    }
 
-        .dashboard-container {
-            max-width: 1200px;
-            margin: auto;
-        }
+    .dashboard-container {
+      max-width: 1200px;
+      margin: auto;
+    }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
 
-        .logo span.green {
-            color: #26d946;
-        }
+    .logo span.green {
+      color: #00ff88;
+    }
 
-        .logo svg {
-            width: 24px;
-            height: 24px;
-        }
+    .logo svg {
+      width: 24px;
+      height: 24px;
+    }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-        .logout {
-            background: #26d946;
-            color: #000;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    .logout {
+      background: #00ff88;
+      color: #000;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
-        }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
 
-        .stat-card {
-            background-color: #1a1f2b;
-            padding: 1.25rem;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(38, 217, 70, 0.1);
-            text-align: center;
-            transition: transform 0.2s ease;
-        }
+    .stat-card {
+      background-color: #1a1f2b;
+      padding: 1.25rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-        }
+    .stat-card:hover {
+      transform: translateY(-4px);
+    }
 
-        .stat-card h3 {
-            font-size: 1rem;
-            color: #bbb;
-            margin-bottom: 0.5rem;
-        }
+    .stat-card h3 {
+      font-size: 1rem;
+      color: #bbb;
+      margin-bottom: 0.5rem;
+    }
 
-        .stat-card p {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #fff;
-        }
-        
-        .chart-container {
-            margin-top: 3rem;
-            background: #1a1f2b;
-            border-radius: 10px;
-            padding: 2rem;
-        }
+    .stat-card p {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
 
-        .match-history {
-            margin-top: 3rem;
-            background: #1a1f2b;
-            border-radius: 10px;
-            padding: 2rem;
-        }
+    .chart-container {
+      margin-top: 3rem;
+      background: #1a1f2b;
+      border-radius: 10px;
+      padding: 2rem;
+    }
 
-        .match-history table {
-            margin-bottom: 1rem;
-        }
-        
-        table {
-            width: 100%; border-collapse: collapse;
-        }
+    .match-history {
+      margin-top: 3rem;
+      background: #1a1f2b;
+      border-radius: 10px;
+      padding: 2rem;
+    }
 
-        th, td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-        }
+    .match-history table {
+      margin-bottom: 1rem;
+    }
 
-        th {
-            background: #2a2f3b;
-            color: #ccc;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-        td {
-            border-top: 1px solid #333;
-        }
-        tr:hover {
-            background: #222;
-        }
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
 
-        .win {
-            color: #26d946;
-            font-weight: bold;
-        }
+    th {
+      background: #2a2f3b;
+      color: #ccc;
+    }
 
-        canvas {
-            max-width: 100%
-        }
-    </style>
+    td {
+      border-top: 1px solid #333;
+    }
+
+    tr:hover {
+      background: #222;
+    }
+
+    .win {
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <header>
-            <div class="logo">
-                <svg fill="none" viewBox="0 0 24 24">
-                    <path d="M3 17L9 11L13 15L21 7" stroke="#26d946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="21" cy="7" r="2" fill="#fff"/>
-                </svg>
-                <span>Trade</span><span class="green">Warz</span>
-            </div>
-            <div class="user-info">
-                <span>Welcome, Trader123</span>  <!--insert acc username here-->
-                <button class="logout">Logout</button>
-            </div>
-        </header>
-        <h1>Your Dashboard</h1>
+  <div class="dashboard-container">
+    <header>
+      <div class="logo">
+        <svg fill="none" viewBox="0 0 24 24">
+          <path d="M3 17L9 11L13 15L21 7" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="21" cy="7" r="2" fill="#fff"/>
+        </svg>
+        <span>Trade</span><span class="green">Warz</span>
+      </div>
+      <div class="user-info">
+        <span>Welcome, Trader123</span>
+        <button class="logout">Logout</button>
+      </div>
+    </header>
 
-        <div class="stats-grid"><!--Insert actual stats here from json idk-->
-            <div class="stat-card">
-                <h3>Rating (ELO)</h3>
-                <p>1523</p> 
-            </div>
-            <div class="stat-card">
-                <h3>Total Gains</h3>
-                <p>$12,400</p>
-            </div>
-            <div class="stat-card">
-                <h3>Average Return</h3>
-                <p>5.4%</p>
-            </div>
-            <div class="stat-card">
-                <h3>Win Rate</h3>
-                <p>62%</p>
-            </div>
-            <div class="stat-card">
-                <h3>Trades Made</h3>
-                <p>250</p>
-            </div>
-            <div class="stat-card">
-                <h3>Best Match</h3>
-                <p>+14.6% vs Trader2</p> <!--How hard would this one be to implement?-->
-            </div>
-        </div>
-        <div class="chart-container">
-            <h2 style="margin-bottom: 1rem;">Performance Over Time</h2>
-            <canvas id="returnsChart" height="100"></canvas>
-        </div>
+    <h1>Your Dashboard</h1>
 
-        <div class="match-history">
-            <h2>Recent Match History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Opponent</th>
-                        <th>Result</th>
-                        <th>Your Return</th>
-                        <th>Opponent Return</th>
-                    </tr>
-                </thead>
-                <tbody><!--implement from matches.JSON or sumth -->
-                    <tr>
-                        <td>2025-07-10</td>
-                        <td>Trader2</td>
-                        <td class="win">Win</td>
-                        <td>+5.2%</td>
-                        <td>-2.1%</td>
-                    </tr>
-                    <tr>
-                        <td>2025-07-09</td>
-                        <td>Trader3</td>
-                        <td class="loss">Loss</td>
-                        <td>-3.4%</td>
-                        <td>+4.5%</td>
-                    </tr>
-                    <tr>
-                        <td>2025-07-08</td>
-                        <td>Trader4</td>
-                        <td class="win">Win</td>
-                        <td>+6.1%</td>
-                        <td>-1.2%</td>
-                    </tr>   
-                </tbody>
-            </table>
-        </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Rating (ELO)</h3>
+        <p>1523</p>
+      </div>
+      <div class="stat-card">
+        <h3>Total Gains</h3>
+        <p>$12,400</p>
+      </div>
+      <div class="stat-card">
+        <h3>Average Return</h3>
+        <p>5.4%</p>
+      </div>
+      <div class="stat-card">
+        <h3>Win Rate</h3>
+        <p>62%</p>
+      </div>
+      <div class="stat-card">
+        <h3>Trades Made</h3>
+        <p>250</p>
+      </div>
+      <div class="stat-card">
+        <h3>Best Match</h3>
+        <p>+14.6% vs Trader2</p>
+      </div>
     </div>
 
-    <script>
-        const ctx = document.getElementById('returnsChart').getContext('2d');
+    <div class="chart-container">
+      <h2 style="margin-bottom: 1rem;">Performance Over Time</h2>
+      <canvas id="returnsChart" height="100"></canvas>
+    </div>
+
+    <div class="match-history">
+      <h2>Recent Match History</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Opponent</th>
+            <th>Result</th>
+            <th>Your Return</th>
+            <th>Opponent Return</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-07-10</td>
+            <td>Trader2</td>
+            <td class="win">Win</td>
+            <td>+5.2%</td>
+            <td>-2.1%</td>
+          </tr>
+          <tr>
+            <td>2025-07-09</td>
+            <td>Trader3</td>
+            <td class="loss">Loss</td>
+            <td>-3.4%</td>
+            <td>+4.5%</td>
+          </tr>
+          <tr>
+            <td>2025-07-08</td>
+            <td>Trader4</td>
+            <td class="win">Win</td>
+            <td>+6.1%</td>
+            <td>-1.2%</td>
+          </tr>   
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('returnsChart').getContext('2d');
     const returnsChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
         datasets: [{
           label: 'Average return this week (%)',
-          data: [2.4, 5.1, 3.8, 7.2, 6.5], //placeholder; use actual data from matches.JSON or sumth
+          data: [2.4, 5.1, 3.8, 7.2, 6.5],
           fill: false,
-          borderColor: '#26d946',
-          backgroundColor: '#26d946',
+          borderColor: '#00ff88',
+          backgroundColor: '#00ff88',
           tension: 0.3
         }]
       },
@@ -272,7 +276,6 @@
         }
       }
     });
-
-    </script>
+  </script>
 </body>
 </html>
