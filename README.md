@@ -9,7 +9,7 @@ A game where users play matches against each other by performing trades, with th
 <img width="803" height="834" alt="image" src="https://github.com/user-attachments/assets/9a39d2a1-a936-4463-b508-5b954ddd71d5" />
 
 <h1>Support</h1>
-Create an issue here
+Create an issue [here](https://github.com/Jimit-Nahar/tradewarz/issues/new/choose)
 
 <h1>Authors and acknowledgment</h1>
 https://github.com/SaiPrajwal583
