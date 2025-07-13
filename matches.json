@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "traderA": "Trader123",
+    "traderB": "Trader2",
+    "scoreA": 10500,
+    "scoreB": 9200,
+    "rated": false
+  },
+  {
+    "traderA": "Trader3",
+    "traderB": "Trader123",
+    "scoreA": 4000,
+    "scoreB": 5500,
+    "rated": false
+  },
+  {
+    "traderA": "Trader4",
+    "traderB": "Trader2",
+    "scoreA": 6800,
+    "scoreB": 7100,
+    "rated": false
+  }
+]
