@@ -1,5 +1,5 @@
 <h1>Name</h1>
-TradeWarz.
+TradeWarz
 
 <h1>Description</h1>
 A game where users play matches against each other by performing trades, with the aim of receiving the highest returns. Wins and losses contribute to players’ individual ratings, inspired by Chess.com’s ELO system.
