@@ -1,17 +1,5 @@
 {
-  "name": "tradewarz",
-  "version": "1.0.0",
-  "description": "Your Fastify project",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
   "dependencies": {
-    "fastify": "^4.0.0",
-    "@fastify/cookie": "^7.0.0",
-    "@fastify/session": "^10.0.0",
-    "@fastify/formbody": "^7.0.0",
-    "@fastify/static": "^6.0.0",
-    "node-cron": "^3.0.0"
+    "express": "^5.1.0"
   }
 }
